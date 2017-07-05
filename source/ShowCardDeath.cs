@@ -1,26 +1,28 @@
 using System;
 using System.Collections;
 using System.IO;
-using <PrivateImplementationDetails>{BDBF81AA-BD99-47D6-8D6D-4DF8F6818835};
 using cardinal.src.match.effects;
 using dwd.core;
 using dwd.core.commands;
 using dwd.core.data;
 using dwd.core.data.composition;
+using dwd.core.data.providers;
+using dwd.core.match;
 using hydra.match.effects;
+using PrivateImplementationDetails;
 using UnityEngine;
 
 namespace cardinal.src.match.commands.misc
 {
 	public class ShowCardDeath : Command
 	{
-		public ShowCardDeath(DataComposition card, string effectPrefabName, bool isPlayerOne, Command postDeathCommand = null)
+		public ShowCardDeath(DataComposition card, string effectPrefabName, Command postDeathCommand = null)
 		{
 			this.effectPrefabName = effectPrefabName;
 			this.card = card;
-			this.postDeathCommand = postDeathCommand;
 			if (effectPrefabName == "millDeath")
 			{
+				bool isPlayerOne = card.GetOne<EntityComponent>().get_Parent() == DataProvider.Get<HydraMatchData>().get_Entities().player.get_Deck();
 				string contents = string.Concat(new string[]
 				{
 					isPlayerOne ? "player" : "opponent",
@@ -36,6 +38,7 @@ namespace cardinal.src.match.commands.misc
 			{
 				this.effectPrefabName = "millDeath";
 			}
+			this.postDeathCommand = postDeathCommand;
 		}
 
 		protected override IEnumerator execute()
@@ -43,7 +46,7 @@ namespace cardinal.src.match.commands.misc
 			MatchEffectConfig deathPrefab = MatchEffects.GetConfig(this.effectPrefabName);
 			float deathDelay = AttackDelays.GetDelay(AttackDelays.DelayType.UnitDeath);
 			yield return new WaitForSeconds(deathDelay);
-			MatchEffectsArea death = new GameObject(<<EMPTY_NAME>>.ru()).AddComponent<DeathEffectArea>();
+			MatchEffectsArea death = new GameObject(Constants.SA()).AddComponent<DeathEffectArea>();
 			death.Init(deathPrefab, this.card);
 			death.Play(null);
 			while (!death.get_Completed())

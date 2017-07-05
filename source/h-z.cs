@@ -5,13 +5,13 @@ using System.Runtime.CompilerServices;
 using dwd.core.account;
 using dwd.core.match.messages;
 using hydra.match.messages;
-using I;
+using i;
 using PrivateImplementationDetails;
 using UnityEngine;
 
 namespace h
 {
-	public class O : VersionedModel
+	public class z : VersionedModel
 	{
 		public bool get_GameEnded()
 		{
@@ -26,18 +26,25 @@ namespace h
 		public void set_GameEndedMessage(GameEnded value)
 		{
 			this.message = value;
+			base.markDirty();
 			bool player_lost = false;
 			if (this.message.LoserMap.ContainsKey(this.player))
 			{
 				player_lost = true;
 			}
-			File.AppendAllText("sent.txt", string.Concat(new object[]
-			{
-				"=== Ended Match, ",
-				player_lost ? "you lost." : "opponent lost.",
-				"===\n"
-			}));
 			base.markDirty();
+			try
+			{
+				File.AppendAllText("sent.txt", string.Concat(new object[]
+				{
+					"=== Ended Match, ",
+					player_lost ? "you lost." : "opponent lost.",
+					"===\n"
+				}));
+			}
+			catch
+			{
+			}
 		}
 
 		public HydraGameCompleted get_GameCompletedNotification()
@@ -59,13 +66,13 @@ namespace h
 		}
 
 		[CompilerGenerated]
-		public o get_Rewards()
+		public A get_Rewards()
 		{
 			return this.Rewards;
 		}
 
 		[CompilerGenerated]
-		private void set_Rewards(o value)
+		private void set_Rewards(A value)
 		{
 			this.Rewards = value;
 		}
@@ -82,7 +89,7 @@ namespace h
 				this.rewards_version = this.get_Version();
 				if (this.get_Ready())
 				{
-					this.set_Rewards(new o(this.get_GameCompletedNotification()));
+					this.set_Rewards(new A(this.get_GameCompletedNotification()));
 				}
 				else
 				{
@@ -91,7 +98,7 @@ namespace h
 			}
 		}
 
-		public O.Outcomes? get_Outcome()
+		public z.Outcomes? get_Outcome()
 		{
 			this.updateOutcome();
 			return this.outcome;
@@ -124,7 +131,7 @@ namespace h
 					bool flag = false;
 					foreach (KeyValuePair<AccountID, string> keyValuePair in this.get_GameEndedMessage().LoserMap)
 					{
-						if (keyValuePair.Value == Constants.yH())
+						if (keyValuePair.Value == Constants.yQ())
 						{
 							flag = true;
 						}
@@ -132,26 +139,26 @@ namespace h
 					}
 					if (flag)
 					{
-						this.outcome = new O.Outcomes?(O.Outcomes.CRASH);
+						this.outcome = new z.Outcomes?(z.Outcomes.CRASH);
 					}
 					else
 					{
-						this.outcome = new O.Outcomes?(O.Outcomes.Draw);
+						this.outcome = new z.Outcomes?(z.Outcomes.Draw);
 					}
 				}
 				else if (this.get_GameEndedMessage().LoserMap.TryGetValue(this.player, out this.lossReason))
 				{
 					this.losers.Add(this.player);
-					this.outcome = new O.Outcomes?(O.Outcomes.Loss);
+					this.outcome = new z.Outcomes?(z.Outcomes.Loss);
 				}
 				else if (this.get_GameEndedMessage().LoserMap.TryGetValue(this.opponent, out this.lossReason))
 				{
 					this.losers.Add(this.opponent);
-					this.outcome = new O.Outcomes?(O.Outcomes.Win);
+					this.outcome = new z.Outcomes?(z.Outcomes.Win);
 				}
 				else
 				{
-					Debug.LogError(Constants.yh());
+					Debug.LogError(Constants.yq());
 				}
 			}
 		}
@@ -165,11 +172,11 @@ namespace h
 		private AccountID opponent;
 
 		[CompilerGenerated]
-		private o Rewards;
+		private A Rewards;
 
 		private ulong rewards_version;
 
-		private O.Outcomes? outcome;
+		private z.Outcomes? outcome;
 
 		private string lossReason;
 

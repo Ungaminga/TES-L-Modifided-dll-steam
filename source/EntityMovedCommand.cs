@@ -23,20 +23,28 @@ public class EntityMovedCommand : Command
 
 	protected override IEnumerator execute()
 	{
-		M.MoveEntity(this.EntityID, this.DestinationID);
-		N entities = DataProvider.Get<HydraMatchData>().get_Entities();
+		x.MoveEntity(this.EntityID, this.DestinationID);
+		y entities = DataProvider.Get<HydraMatchData>().get_Entities();
 		EntityComponent childEntity;
 		if (!entities.All.TryGetValue(this.EntityID, out childEntity))
 		{
-			throw new Exception(Constants.Zm());
+			throw new Exception(Constants.ZU());
 		}
 		EntityComponent entityComponent;
 		if (!entities.All.TryGetValue(this.DestinationID, out entityComponent))
 		{
-			throw new Exception(Constants.ZN());
+			throw new Exception(Constants.Zu());
 		}
 		entityComponent.AddChild(childEntity);
-		File.WriteAllText("cards_count.txt", DataProvider.Get<HydraMatchData>().get_Entities().player.get_Hand().Children.Count.ToString());
+		try
+		{
+			File.WriteAllText("cards_count.txt", DataProvider.Get<HydraMatchData>().get_Entities().player.get_Hand().Children.Count.ToString());
+			yield break;
+		}
+		catch
+		{
+			yield break;
+		}
 		yield break;
 		yield break;
 	}
