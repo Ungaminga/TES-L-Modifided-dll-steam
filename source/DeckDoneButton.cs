@@ -91,19 +91,19 @@ namespace cardinal.src.deckEditor
 					Pile pile;
 					if (keyValuePair.Key != null && keyValuePair.Value.get_Piles().TryGetValue(Constants.K(), out pile))
 					{
-						string deck = "";
+						string text = "";
 						foreach (KeyValuePair<ArchetypeID, int> keyValuePair2 in pile)
 						{
-							string.Concat(new object[]
+							text = string.Concat(new object[]
 							{
-								deck,
+								text,
 								archetypes.get_All()[keyValuePair2.Key].GetOne<NameData>().get_Name(),
 								" ",
 								keyValuePair2.Value,
 								"\r\n"
 							});
 						}
-						File.WriteAllText(Path.Combine("decks", keyValuePair.Value.get_Name() + ".txt"), deck);
+						File.WriteAllText(Path.Combine("decks", keyValuePair.Value.get_Name() + ".txt"), text);
 					}
 				}
 				bool flag = true;
@@ -141,7 +141,7 @@ namespace cardinal.src.deckEditor
 			if (deckToDelete != null && deckToDelete.GetOne<global::H.D>().get_AllowDelete())
 			{
 				result = true;
-				Dictionary<string, ArchetypeID[]> piles = this.get_model().A.A.AsSerializableDeck().Piles;
+				Dictionary<string, ArchetypeID[]> piles = this.get_model().A.editor.AsSerializableDeck().Piles;
 				foreach (KeyValuePair<string, ArchetypeID[]> keyValuePair in piles)
 				{
 					if (keyValuePair.Key != Constants.Fz() && keyValuePair.Value.Length > 0)
